@@ -15,12 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.unibonn.vishal.pipelines;
+package de.unibonn.vishal.namedentities;
 
 /**
  *
  * @author Vishal Siramshetty <srmshtty[at]gmail.com>
  */
-public class Chemical {
+public class Disease {
     
 }

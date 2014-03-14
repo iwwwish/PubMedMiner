@@ -6,12 +6,12 @@
 package de.unibonn.vishal.tools;
 
 import au.com.bytecode.opencsv.CSVReader;
-import java.io.File;
+import de.unibonn.vishal.namedentities.OntologyTerm;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,9 +22,9 @@ import java.util.logging.Logger;
 public class OntologyParser {
 
     /**
-     * A TreeMap<ChEBI_ID,Name> of ChEBI ontology terms
+     * A List of ChEBI ontology terms
      */
-    private static TreeMap<String, String> chebiOntology;
+    private static List<OntologyTerm> CHEBI_ONTOLOGY;
 
     /**
      * A simple class that loads ChEBI ontology when needed
@@ -41,16 +41,18 @@ public class OntologyParser {
             String[] row;
             String csvFilename = "resources/chebi_onto.csv";
             CSVReader csvReader = new CSVReader(new FileReader(csvFilename));
-
-            // new TreeMap<ChEBI ID,Name>()
-            chebiOntology = new TreeMap<>();
+            CHEBI_ONTOLOGY = new ArrayList<>();
             List<String[]> content = csvReader.readAll();
             for (Object object : content) {
                 row = (String[]) object;
 
                 // populating the ontology map
                 if (row[0] != null && row[1] != null) {
-                    chebiOntology.put(row[0], row[1]);
+                    OntologyTerm term = new OntologyTerm();
+                    term.setIdentifier(row[0]);
+                    term.setName(row[1]);
+                    CHEBI_ONTOLOGY.add(term);
+                    System.out.println(term.toString());
                 } else {
                     break;
                 }
@@ -68,8 +70,7 @@ public class OntologyParser {
     public static void main(String[] args) {
         try {
             OntologyParser.Chebi.loadOntology();
-            //System.out.println(f.getAbsolutePath());
-            //System.out.println(f.getAbsolutePath());
+            System.out.println(Integer.MAX_VALUE);
         } catch (IOException ex) {
             Logger.getLogger(OntologyParser.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -78,7 +78,7 @@ public class AbstractTagger extends PubMedAbstract {
                 if ("CM".equals(entity.getType().toString())) {
                     String e = entity.getSurface();
                     e = e.replaceAll("\\+", "#").replaceAll("\\(", "@").replaceAll("\\)", "~");
-                    absT = absT.replaceAll(e, "<font style=\"background-color: yellow\">" + e + "</font>");
+                    absT = absT.replaceAll("\\b" + e + "\\b", "<font style=\"background-color: yellow\">" + e + "</font>");
                 }
             }
             absText = absT.replaceAll("#", "+").replaceAll("@", "(").replaceAll("~", ")");
@@ -145,5 +145,9 @@ public class AbstractTagger extends PubMedAbstract {
             Logger.getLogger(AbstractTagger.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    public static void main(String[] args) {
+       
     }
 }

@@ -15,19 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.unibonn.vishal.pipelines;
+package de.unibonn.vishal.namedentities;
 
 /**
  *
- * @author vsiramshetty
+ * @author Vishal Siramshetty <srmshtty[at]gmail.com>
  */
-public class Drug {
-
-    @Override
-    public String toString() {
-        return super.toString(); //To change body of generated methods, choose Tools | Templates.
-    }
-  
-    
+public class Chemical {
     
 }

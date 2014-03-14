@@ -14,32 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.unibonn.vishal.pipelines;
 
-import java.util.List;
+package de.unibonn.vishal.namedentities;
 
 /**
  *
- * @author Vishal Siramshetty <srmshtty[at]gmail.com>
+ * @author vsiramshetty
  */
-public class OntologyTerm {
+public class Drug {
 
-    private String Name;
-    private String Identifier;
-    private List<String> Synonyms;
-
-    public String getName() {
-        return Name;
+    @Override
+    public String toString() {
+        return super.toString(); //To change body of generated methods, choose Tools | Templates.
     }
-
-    public String getIdentifier() {
-        return Identifier;
-    }
-
-    public List<String> getSynonyms() {
-        return Synonyms;
-    }
+  
     
     
-
 }

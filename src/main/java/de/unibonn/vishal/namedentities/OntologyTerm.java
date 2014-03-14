@@ -14,13 +14,47 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package de.unibonn.vishal.namedentities;
 
-package de.unibonn.vishal.pipelines;
+import java.util.List;
 
 /**
  *
  * @author Vishal Siramshetty <srmshtty[at]gmail.com>
  */
-public class Disease {
-    
+public class OntologyTerm {
+
+    private String Name;
+    private String Identifier;
+    private List<String> Synonyms;
+
+    @Override
+    public String toString() {
+        return "Name: " + getName() + "\nID: " + getIdentifier();
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public String getIdentifier() {
+        return Identifier;
+    }
+
+    public List<String> getSynonyms() {
+        return Synonyms;
+    }
+
+    public void setName(String Name) {
+        this.Name = Name;
+    }
+
+    public void setIdentifier(String Identifier) {
+        this.Identifier = Identifier;
+    }
+
+    public void setSynonyms(List<String> Synonyms) {
+        this.Synonyms = Synonyms;
+    }
+
 }
