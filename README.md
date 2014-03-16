@@ -8,6 +8,6 @@ Screenshot of the application below depicts named entities tagged in yellow.
 ![alt tag](http://oi59.tinypic.com/11ui493.jpg)
 
 ###### Download/Distribution:
-Feel free to download* or distribute the source code. For a .jar or .deb or .dmg file, or to know more about PubMedMiner, please contact me (srmshtty@gmail.com).
+Feel free to download or distribute the source code. For a .jar* or .deb* or .dmg* file, or to know more about PubMedMiner, please contact me (srmshtty@gmail.com).
 
 * *Note: The application is still under development and may not be available at this stage for distribution as a .jar or .dmg or .deb file. However, one can download the source code. Please feel free to comment or to suggest improvements.
