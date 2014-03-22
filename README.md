@@ -5,7 +5,7 @@ This open source desktop application automatically retrieves a set of very recen
 
 Screenshot of the application below depicts named entities tagged in yellow.
 
-![alt tag](http://oi59.tinypic.com/11ui493.jpg)
+![alt tag](http://i57.tinypic.com/xqfdjs.jpg)
 
 ###### Download/Distribution:
 Feel free to download or distribute the source code. For a .jar* or .deb* or .dmg* file, or to know more about PubMedMiner, please contact me (srmshtty@gmail.com).
