@@ -100,15 +100,7 @@
             <groupId>uk.ac.cam.ch.wwmm.oscar</groupId>
             <artifactId>oscar4-api</artifactId>
             <version>4.1.2</version>
-        </dependency>
-        <!-- BioJava -->
-        <dependency>
-            <groupId>org.biojava</groupId>
-            <artifactId>biojava3-core</artifactId>
-            <version>3.0</version>
-        </dependency>
-            
-        
+        </dependency>   
     </dependencies>
     <name>PubMedMiner</name>
     <build>

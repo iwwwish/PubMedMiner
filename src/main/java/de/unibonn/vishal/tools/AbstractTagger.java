@@ -18,17 +18,22 @@ package de.unibonn.vishal.tools;
 
 import de.unibonn.vishal.pubmed.PubMedAbstract;
 import au.com.bytecode.opencsv.CSVReader;
+import de.unibonn.vishal.namedentities.OntologyTerm;
 import static de.unibonn.vishal.tools.POSTagger.getNounPhrases;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import uk.ac.cam.ch.wwmm.oscar.Oscar;
-import uk.ac.cam.ch.wwmm.oscar.document.NamedEntity;
+import uk.ac.cam.ch.wwmm.oscar.chemnamedict.entities.ChemicalStructure;
+import uk.ac.cam.ch.wwmm.oscar.chemnamedict.entities.FormatType;
+import uk.ac.cam.ch.wwmm.oscar.chemnamedict.entities.ResolvedNamedEntity;
 
 /**
  *
@@ -48,11 +53,16 @@ public class AbstractTagger extends PubMedAbstract {
         /**
          * Co-occurrence Analysis
          */
-        COA;
+        COA,
+        /**
+         * ChEBI Role tagging
+         */
+        CHEBI;
     }
 
     private TreeMap<String, String> roles;
     private List<PubMedAbstract> abstracts;
+    private final Oscar oscar = new Oscar();
 
     /**
      * A constructor for the class AbstractTagger
@@ -64,27 +74,55 @@ public class AbstractTagger extends PubMedAbstract {
         this.abstracts = abstracts;
     }
 
+    public List<String> getNamedEntitiesWithStructure(String inputText) {
+
+        List<String> structreEntities = new ArrayList<>();
+        List<ResolvedNamedEntity> entities = oscar.findAndResolveNamedEntities(inputText);
+        for (ResolvedNamedEntity ne : entities) {
+            ChemicalStructure inchi = ne.getFirstChemicalStructure(FormatType.INCHI);
+            ChemicalStructure smile = ne.getFirstChemicalStructure(FormatType.SMILES);
+            if (inchi != null || smile != null) {
+                structreEntities.add(ne.getNamedEntity().getSurface());
+            }
+        }
+        return structreEntities;
+    }
+
     /**
      * Abstract is tagged with named entities
      *
      */
     public void tagNamedEntities() {
-        Oscar oscar = new Oscar();
+        //Oscar oscar = new Oscar();
         for (PubMedAbstract abs : abstracts) {
             String absText = abs.getAbstractText();
-            List<NamedEntity> entities = oscar.findNamedEntities(absText);
+            List<String> entities = getNamedEntitiesWithStructure(absText);
             String absT = absText.replaceAll("\\+", "#").replaceAll("\\(", "@").replaceAll("\\)", "~");
-            for (NamedEntity entity : entities) {
-                if ("CM".equals(entity.getType().toString())) {
-                    String e = entity.getSurface();
-                    e = e.replaceAll("\\+", "#").replaceAll("\\(", "@").replaceAll("\\)", "~");
-                    absT = absT.replaceAll("\\b" + e + "\\b", "<font style=\"background-color: yellow\">" + e + "</font>");
-                }
+            for (String e : entities) {
+                e = e.replaceAll("\\+", "#").replaceAll("\\(", "@").replaceAll("\\)", "~");
+                absT = absT.replaceAll("\\b" + e + "\\b", "<font style=\"background-color: yellow\">" + e + "</font>");
             }
             absText = absT.replaceAll("#", "+").replaceAll("@", "(").replaceAll("~", ")");
             System.out.println("Final: " + absText);
             abs.setAbstractText(absText);
         }
+    }
+
+    public HashMap<HashMap<String, List<String>>, Integer> getCoAnalysisMap() {
+        HashMap<HashMap<String, List<String>>, Integer> coMap = new HashMap();
+        for (PubMedAbstract abs : abstracts) {
+            String absText = abs.getAbstractText();
+            HashMap<String, List<String>> occurrences = AbstractParser.getCoOccurrenceMap(absText);
+            if (!occurrences.isEmpty()) {
+                for (Map.Entry<String, List<String>> entry : occurrences.entrySet()) {
+                    absText = absText.replace(entry.getKey(), "<u>" + entry.getKey() + "</u>");
+                    abs.setAbstractText(absText);
+                }
+                coMap.put(occurrences, abs.getPMID());
+            }
+
+        }
+        return coMap;
     }
 
     /**
@@ -114,6 +152,16 @@ public class AbstractTagger extends PubMedAbstract {
                     Logger.getLogger(AbstractTagger.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+        }
+
+    }
+
+    public void tagChebiOntologyTerms() throws IOException {
+
+        OntologyParser.Chebi.loadOntology();
+        List<OntologyTerm> terms = OntologyParser.CHEBI_ONTOLOGY;
+        if (!terms.isEmpty()) {
+
         }
 
     }
@@ -148,6 +196,6 @@ public class AbstractTagger extends PubMedAbstract {
     }
 
     public static void main(String[] args) {
-       
+
     }
 }

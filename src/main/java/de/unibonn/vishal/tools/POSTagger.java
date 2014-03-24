@@ -65,10 +65,27 @@ public class POSTagger {
     /**
      * Returns the word from the tagged word
      *
+     * @param posTaggedWords
+     * @return words without POS tags
+     */
+    public static List<String> getUntaggedWords(List<String> posTaggedWords) {
+
+        List<String> untaggedWords = new ArrayList<>();
+        for (String posTaggedWord : posTaggedWords) {
+            int p = posTaggedWord.indexOf("_");
+            untaggedWords.add(posTaggedWord.substring(0, p));
+        }
+        return untaggedWords;
+    }
+
+    /**
+     * Returns the word from the tagged word
+     *
      * @param posTaggedWord
-     * @return word
+     * @return word without POS tag
      */
     public static String getWord(String posTaggedWord) {
+
         int p = posTaggedWord.indexOf("_");
         posTaggedWord = posTaggedWord.substring(0, p);
 

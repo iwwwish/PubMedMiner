@@ -16,20 +16,31 @@
  */
 package de.unibonn.vishal.tools;
 
+import de.unibonn.vishal.utils.NERUtility;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
+import uk.ac.cam.ch.wwmm.oscar.Oscar;
+import uk.ac.cam.ch.wwmm.oscar.chemnamedict.entities.ChemicalStructure;
+import uk.ac.cam.ch.wwmm.oscar.chemnamedict.entities.FormatType;
+import uk.ac.cam.ch.wwmm.oscar.chemnamedict.entities.ResolvedNamedEntity;
 
 /**
  *
  * @author Vishal Siramshetty <srmshtty[at]gmail.com>
  */
 public class AbstractParser {
+
+    /**
+     * OSCAR4 parser
+     */
+    public static final Oscar oscar = new Oscar();
 
     /**
      * A list of possible STOP WORDS in English.
@@ -61,7 +72,7 @@ public class AbstractParser {
      * @throws IOException
      */
     public static void loadStopWords() throws FileNotFoundException, IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("/Users/vishalkpp/NetBeansProjects/CheMIENER/Data/StopWords.txt"));
+        BufferedReader reader = new BufferedReader(new FileReader("resources/StopWords.txt"));
         String line;
         while ((line = reader.readLine()) != null) {
             STOP_WORDS.add(line);
@@ -197,6 +208,68 @@ public class AbstractParser {
         }
 
         return copy;
+    }
+
+    /**
+     * Returns a list of entities with chemical structure
+     *
+     * @param inputText
+     * @return
+     */
+    public static List<String> getNamedEntitiesWithStructure(String inputText) {
+
+        List<String> structreEntities = new ArrayList<>();
+        List<ResolvedNamedEntity> entities = oscar.findAndResolveNamedEntities(inputText);
+        for (ResolvedNamedEntity ne : entities) {
+            ChemicalStructure inchi = ne.getFirstChemicalStructure(FormatType.INCHI);
+            ChemicalStructure smile = ne.getFirstChemicalStructure(FormatType.SMILES);
+            if (inchi != null || smile != null) {
+                structreEntities.add(ne.getNamedEntity().getSurface());
+            }
+        }
+        return structreEntities;
+    }
+
+    /**
+     * Returns a Map where the key is a list of entities co-occurring in a
+     * particular sentence, which is the corresponding value
+     *
+     * @param abstractText
+     * @return
+     */
+    public static HashMap<String, List<String>> getCoOccurrenceMap(String abstractText) {
+        List<String> sentences = getSentences(abstractText);
+        HashMap<String, List<String>> occurrenceMap = new HashMap();
+        for (String sentence : sentences) {
+            List<String> entities = getNamedEntitiesWithStructure(sentence);
+            NERUtility.Strings.removeDuplicates(entities);
+            if (entities.size() > 1) {
+                occurrenceMap.put(sentence, entities);
+            }
+        }
+        return occurrenceMap;
+    }
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        String text = "Linear IgA bullous dermatosis (LABD) is clinically characterized by the appearance of multiple small itchy bullae within annular erythema on the entire body; the immunological characteristic is linear deposits of IgA on the basement membrane zone (BMZ). Drugs known to induce LABD include captopril, trimethoprim/sulfamethoxazole, phenytoin, and diclofenac. Vancomycin (VCM)-induced LABD (VILABD) was first reported in 1988 by Baden;(1) thereafter, VCM has been reported as the most common cause of drug-induced LABD, accounting for 46.2% of the cases.(2) Immunoblot analysis has been performed in only 5 cases of VILABD reported hitherto. This report is the first to present a case of VCM-associated LABD with evidence of IgA antibodies to the 145-kDa and 165-kDa α3 subunits of laminin-332. This article is protected by copyright. All rights reserved.";
+        List<String> sentences = getSentences(text);
+        HashMap<String, String> occurrenceMap = new HashMap();
+        for (String sentence : sentences) {
+            List<String> entities = getNamedEntitiesWithStructure(sentence);
+            if (entities.size() > 1) {
+                StringBuilder builder = new StringBuilder();
+                int i = 0;
+                for (String entity : entities) {
+                    i++;
+                    builder.append(entity);
+                    if (i < entities.size()) {
+                        builder.append("_");
+                    }
+                }
+                occurrenceMap.put(builder.toString(), sentence);
+            }
+        }
+        System.out.println(Arrays.asList(occurrenceMap).toString());
     }
 
 }

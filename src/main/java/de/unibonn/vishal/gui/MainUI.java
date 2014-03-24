@@ -31,7 +31,9 @@ import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -640,8 +642,27 @@ public class MainUI extends javax.swing.JFrame {
                     case COA:
                         List<PubMedAbstract> copy1_abstracts = new ArrayList<>(abstracts);
                         AbstractTagger absTagger1 = new AbstractTagger(copy1_abstracts);
-                        progressBar.setString("Recognizing ChEBI roles...");
-                        absTagger1.tagChebiRoles();
+                        progressBar.setString("Recognizing named entities...");
+                        absTagger1.tagNamedEntities();
+                        progressBar.setString("Finding co-occurrences...");
+                        List<String> allEntities = new ArrayList<>();
+                        HashMap<HashMap<String, List<String>>, Integer> coMap = absTagger1.getCoAnalysisMap();
+                        for (Map.Entry<HashMap<String, List<String>>, Integer> entry : coMap.entrySet()) {
+                            HashMap<String, List<String>> occ = entry.getKey();
+
+                            for (Map.Entry<String, List<String>> e : occ.entrySet()) {
+
+                                List<String> entities = e.getValue();
+
+                                for (String entity : entities) {
+
+                                    System.out.println("{\"name\":\"" + entity + "\",\"group\":1},");
+                                }
+                            }
+
+                        }
+                        System.out.println(allEntities.size());
+
                         break;
                     case NER:
                         List<PubMedAbstract> copy2_abstracts = new ArrayList<>(abstracts);

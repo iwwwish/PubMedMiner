@@ -1,7 +1,18 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2014 Vishal Siramshetty <srmshtty[at]gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.unibonn.vishal.tools;
 
@@ -11,20 +22,21 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  *
- * @author vishal
+ * @author Vishal Siramshetty <srmshtty[at]gmail.com>
  */
 public class OntologyParser {
 
     /**
      * A List of ChEBI ontology terms
      */
-    private static List<OntologyTerm> CHEBI_ONTOLOGY;
+    public static List<OntologyTerm> CHEBI_ONTOLOGY;
 
     /**
      * A simple class that loads ChEBI ontology when needed
@@ -41,6 +53,7 @@ public class OntologyParser {
             String[] row;
             String csvFilename = "resources/chebi_onto.csv";
             CSVReader csvReader = new CSVReader(new FileReader(csvFilename));
+
             CHEBI_ONTOLOGY = new ArrayList<>();
             List<String[]> content = csvReader.readAll();
             for (Object object : content) {
@@ -51,14 +64,18 @@ public class OntologyParser {
                     OntologyTerm term = new OntologyTerm();
                     term.setIdentifier(row[0]);
                     term.setName(row[1]);
+                    String synonyms = row[2];
+                    String[] syn = synonyms.split(", ");
+                    if (!Arrays.asList(syn).isEmpty()) {
+                        term.setSynonyms(Arrays.asList(syn));
+                    } else {
+                        term.setSynonyms(null);
+                    }
                     CHEBI_ONTOLOGY.add(term);
-                    System.out.println(term.toString());
                 } else {
                     break;
                 }
-
             }
-
         }
 
         private Chebi() {
@@ -70,7 +87,7 @@ public class OntologyParser {
     public static void main(String[] args) {
         try {
             OntologyParser.Chebi.loadOntology();
-            System.out.println(Integer.MAX_VALUE);
+            System.out.println(CHEBI_ONTOLOGY.size());
         } catch (IOException ex) {
             Logger.getLogger(OntologyParser.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -30,6 +30,11 @@ public class OntologyTerm {
 
     @Override
     public String toString() {
+
+        if (getSynonyms() != null) {
+            return "Name: " + getName() + "\nID: " + getIdentifier() + "\nSynonyms: " + getSynonyms();
+        }
+
         return "Name: " + getName() + "\nID: " + getIdentifier();
     }
 
