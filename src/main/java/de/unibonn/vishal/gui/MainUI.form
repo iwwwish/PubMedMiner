@@ -55,6 +55,17 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Co-occurrence network"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="viewCoNetworkActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="viewCoMatrix">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Co-occurrence matrix"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="viewCoMatrixActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>

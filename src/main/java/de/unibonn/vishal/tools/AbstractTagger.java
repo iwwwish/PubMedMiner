@@ -17,11 +17,8 @@
 package de.unibonn.vishal.tools;
 
 import de.unibonn.vishal.pubmed.PubMedAbstract;
-import au.com.bytecode.opencsv.CSVReader;
 import de.unibonn.vishal.namedentities.OntologyTerm;
 import static de.unibonn.vishal.tools.POSTagger.getNounPhrases;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -103,7 +100,7 @@ public class AbstractTagger extends PubMedAbstract {
                 absT = absT.replaceAll("\\b" + e + "\\b", "<font style=\"background-color: yellow\">" + e + "</font>");
             }
             absText = absT.replaceAll("#", "+").replaceAll("@", "(").replaceAll("~", ")");
-            System.out.println("Final: " + absText);
+            //System.out.println("Final: " + absText);
             abs.setAbstractText(absText);
         }
     }
@@ -114,10 +111,10 @@ public class AbstractTagger extends PubMedAbstract {
             String absText = abs.getAbstractText();
             HashMap<String, List<String>> occurrences = AbstractParser.getCoOccurrenceMap(absText);
             if (!occurrences.isEmpty()) {
-                for (Map.Entry<String, List<String>> entry : occurrences.entrySet()) {
-                    absText = absText.replace(entry.getKey(), "<u>" + entry.getKey() + "</u>");
-                    abs.setAbstractText(absText);
-                }
+                //for (Map.Entry<String, List<String>> entry : occurrences.entrySet()) {
+                //  absText = absText.replace(entry.getKey(), "<u>" + entry.getKey() + "</u>");
+                // abs.setAbstractText(absText);
+                //  }
                 coMap.put(occurrences, abs.getPMID());
             }
 
@@ -130,7 +127,7 @@ public class AbstractTagger extends PubMedAbstract {
      *
      */
     public void tagChebiRoles() {
-        loadChebiRoles();
+        //loadChebiRoles();
         for (Map.Entry<String, String> role : roles.entrySet()) {
             String role_id = role.getKey();
             String role_name = role.getValue();
@@ -161,41 +158,8 @@ public class AbstractTagger extends PubMedAbstract {
         OntologyParser.Chebi.loadOntology();
         List<OntologyTerm> terms = OntologyParser.CHEBI_ONTOLOGY;
         if (!terms.isEmpty()) {
-
+            // To Do
         }
-
     }
 
-    private void loadChebiRoles() {
-        try {
-            String[] row;
-            String csvFilename = "/home/vishal/NetBeansProjects/PubMedMiner-master/resources/chebi_roles.csv";
-            CSVReader csvReader = new CSVReader(new FileReader(csvFilename));
-
-            // new TreeMap<ChEBI ID,ChEBI role>()
-            roles = new TreeMap<>();
-            List<String[]> content = csvReader.readAll();
-            for (Object object : content) {
-                row = (String[]) object;
-
-                // populating the roles map
-                if (row[0] != null && row[1] != null) {
-                    roles.put(row[0], row[1]);
-                    //System.out.println(row[0] + " " + row[1]);
-                } else {
-                    break;
-                }
-
-            }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(AbstractTagger.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(AbstractTagger.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    public static void main(String[] args) {
-
-    }
 }

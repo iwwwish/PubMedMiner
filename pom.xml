@@ -100,8 +100,14 @@
             <groupId>uk.ac.cam.ch.wwmm.oscar</groupId>
             <artifactId>oscar4-api</artifactId>
             <version>4.1.2</version>
-        </dependency>   
+        </dependency>
+        <dependency>
+            <groupId>ru.atomation.native</groupId>
+            <artifactId>xulrunner-linux</artifactId>
+            <version>1.9</version>
+        </dependency>
     </dependencies>
+    
     <name>PubMedMiner</name>
     <build>
         <plugins>

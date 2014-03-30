@@ -19,6 +19,8 @@ package de.unibonn.vishal.gui;
 import de.unibonn.vishal.tools.AbstractTagger;
 import de.unibonn.vishal.pubmed.PubMedAbstract;
 import de.unibonn.vishal.pubmed.PubMedUtils;
+import de.unibonn.vishal.tools.JSONWriter;
+import de.unibonn.vishal.tools.SimpleWebBrowser;
 import de.unibonn.vishal.utils.Utility;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -33,7 +35,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -66,6 +69,8 @@ public class MainUI extends javax.swing.JFrame {
     private String query;
     private UITagger tagger = null;
     private AbstractLoader loader = null;
+    private String jsonMatrix;
+    private String jsonTree;
 
     /**
      * Creates new form MainUI
@@ -107,6 +112,7 @@ public class MainUI extends javax.swing.JFrame {
         saveAllAbstracts = new javax.swing.JMenuItem();
         viewMenu = new javax.swing.JMenu();
         viewCoNetwork = new javax.swing.JMenuItem();
+        viewCoMatrix = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("PubMedMiner");
@@ -316,7 +322,20 @@ public class MainUI extends javax.swing.JFrame {
         viewMenu.setText("View ");
 
         viewCoNetwork.setText("Co-occurrence network");
+        viewCoNetwork.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewCoNetworkActionPerformed(evt);
+            }
+        });
         viewMenu.add(viewCoNetwork);
+
+        viewCoMatrix.setText("Co-occurrence matrix");
+        viewCoMatrix.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewCoMatrixActionPerformed(evt);
+            }
+        });
+        viewMenu.add(viewCoMatrix);
 
         mainMenu.add(viewMenu);
 
@@ -458,6 +477,7 @@ public class MainUI extends javax.swing.JFrame {
                 statusBar.setText("Error: Single query cannot have query separator AND.");
             } else {
                 statusBar.setText(null);
+
             }
 
         }
@@ -471,6 +491,36 @@ public class MainUI extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_queryWordKeyReleased
+
+    private void viewCoNetworkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewCoNetworkActionPerformed
+
+        if (jsonTree == null) {
+            statusBar.setText("Error: No co-occurrence network found!");
+        } else {
+            // to do: create a jFrame and display network
+            statusBar.setText("Displaying network in a new Window!");
+            try {
+                SimpleWebBrowser.openHtmlPage("visualization/network/index.html");
+            } catch (IOException ex) {
+                Utility.UI.showInfoMessage(getRootPane(), "Network not found!");
+            }
+        }
+
+    }//GEN-LAST:event_viewCoNetworkActionPerformed
+
+    private void viewCoMatrixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewCoMatrixActionPerformed
+        if (jsonMatrix == null) {
+            statusBar.setText("Error: No co-occurrence matrix found!");
+        } else {
+            // to do: create a jFrame and display matrix
+            statusBar.setText("Displaying matrix in a new Window!");
+            try {
+                SimpleWebBrowser.openHtmlPage("visualization/matrix/test.html");
+            } catch (IOException ex) {
+                Utility.UI.showInfoMessage(getRootPane(), "Matrix not found!");
+            }
+        }
+    }//GEN-LAST:event_viewCoMatrixActionPerformed
 
     private void updateAbstracts() {
 
@@ -645,24 +695,14 @@ public class MainUI extends javax.swing.JFrame {
                         progressBar.setString("Recognizing named entities...");
                         absTagger1.tagNamedEntities();
                         progressBar.setString("Finding co-occurrences...");
-                        List<String> allEntities = new ArrayList<>();
                         HashMap<HashMap<String, List<String>>, Integer> coMap = absTagger1.getCoAnalysisMap();
-                        for (Map.Entry<HashMap<String, List<String>>, Integer> entry : coMap.entrySet()) {
-                            HashMap<String, List<String>> occ = entry.getKey();
-
-                            for (Map.Entry<String, List<String>> e : occ.entrySet()) {
-
-                                List<String> entities = e.getValue();
-
-                                for (String entity : entities) {
-
-                                    System.out.println("{\"name\":\"" + entity + "\",\"group\":1},");
-                                }
-                            }
-
-                        }
-                        System.out.println(allEntities.size());
-
+                        JSONWriter writer = new JSONWriter(coMap);
+                        progressBar.setString("Creating nodes and links...");
+                        writer.createNodesAndLinks();
+                        writer.writeJSONTree();
+                        writer.writeJSONMatrix();
+                        jsonTree = writer.getJsonTree();
+                        jsonMatrix = writer.getJsonMatrix();
                         break;
                     case NER:
                         List<PubMedAbstract> copy2_abstracts = new ArrayList<>(abstracts);
@@ -673,7 +713,6 @@ public class MainUI extends javax.swing.JFrame {
                 }
 
             } else {
-                System.err.println("Error! No abstracts selected for analysis.");
                 statusBar.setText("Error! No abstracts selected for analysis.");
             }
             return null;
@@ -783,6 +822,7 @@ public class MainUI extends javax.swing.JFrame {
     private javax.swing.JMenu saveMenu;
     private javax.swing.JRadioButton singleQuery;
     private javax.swing.JLabel statusBar;
+    private javax.swing.JMenuItem viewCoMatrix;
     private javax.swing.JMenuItem viewCoNetwork;
     private javax.swing.JMenu viewMenu;
     // End of variables declaration//GEN-END:variables
