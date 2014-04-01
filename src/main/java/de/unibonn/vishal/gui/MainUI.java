@@ -31,6 +31,7 @@ import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -477,9 +478,7 @@ public class MainUI extends javax.swing.JFrame {
                 statusBar.setText("Error: Single query cannot have query separator AND.");
             } else {
                 statusBar.setText(null);
-
             }
-
         }
 
         if (multipleQuery.isSelected()) {
@@ -503,9 +502,9 @@ public class MainUI extends javax.swing.JFrame {
                 SimpleWebBrowser.openHtmlPage("visualization/network/index.html");
             } catch (IOException ex) {
                 Utility.UI.showInfoMessage(getRootPane(), "Network not found!");
+                ex.printStackTrace();
             }
         }
-
     }//GEN-LAST:event_viewCoNetworkActionPerformed
 
     private void viewCoMatrixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewCoMatrixActionPerformed
@@ -518,6 +517,7 @@ public class MainUI extends javax.swing.JFrame {
                 SimpleWebBrowser.openHtmlPage("visualization/matrix/test.html");
             } catch (IOException ex) {
                 Utility.UI.showInfoMessage(getRootPane(), "Matrix not found!");
+                ex.printStackTrace();
             }
         }
     }//GEN-LAST:event_viewCoMatrixActionPerformed
