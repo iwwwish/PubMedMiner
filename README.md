@@ -1,7 +1,7 @@
 PubMedMiner
 =============
 
-This open source desktop application that automatically retrieves a set of very recent *PubMed* articles for a given query word and facilitates further analysis that includes: *named entity recognition* and *co-occurrence analysis*. The application also builds a co-occurrence network which when visualized gives an idea about the relation between the query word and different biomedical concepts, identified in the texts using different ontologies. Such analysis is especially helpful in relating an entity (for example a drug) of recent interest to its related biomedical concepts.
+This open source desktop application automatically retrieves a set of very recent *PubMed* articles for a given query word and facilitates further analysis that includes: *named entity recognition* and *co-occurrence analysis*. The application also builds a co-occurrence network which when visualized gives an idea about the relation between the query word and different biomedical concepts, identified in the texts using different ontologies. Such analysis is especially helpful in relating an entity (for example a drug) of recent interest to its related biomedical concepts.
 
 The following screenshots of the application give an idea about how the tool looks and what it can do.
 
