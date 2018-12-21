@@ -1,7 +1,7 @@
 PubMedMiner
 =============
 
-This open source desktop application automatically retrieves a set of very recent *PubMed* articles for a given query word and facilitates further analysis that includes: *named entity recognition* and *co-occurrence analysis*. The application also builds a co-occurrence network which when visualized gives an idea about the relation between the query word and different biomedical concepts identified in the texts using different ontologies. Such analysis is especially helpful in relating an entity (for example a drug) of recent interest to its related biomedical concepts.
+PubMedMiner automatically retrieves a set of very recent *PubMed* articles for a given query word and facilitates further analysis that includes: *named entity recognition* and *co-occurrence analysis*. The application also builds a co-occurrence network which when visualized gives an idea about the relation between the query word and different biomedical concepts identified in the texts using different ontologies. Such analysis is especially helpful in relating an entity (for example a drug) of recent interest to its related biomedical concepts.
 
 The following screenshots of the application give an idea about how the tool looks and what it can do.
 
@@ -17,7 +17,4 @@ The following screenshots of the application give an idea about how the tool loo
 
 ![alt tag](http://i62.tinypic.com/2jbjnye.jpg)
 
-###### Download/Distribution:
-Feel free to download or distribute the source code. For a .jar or .deb or .dmg file of the application, or to know more about PubMedMiner, please contact me (srmshtty@gmail.com).
-
-* Note: The application currently retrieves only a maximum of 299 Abstracts per run due to the limitations in fetching higher number of Abstracts from PubMed with a single *http* request. This will be fixed very soon. The application is open for further development. Please feel free to comment or to suggest improvements.
+* Note: The application currently retrieves only a maximum of 299 Abstracts per run due to the limitations in fetching higher number of Abstracts from PubMed with a single *http* request. The application will be developed further.
